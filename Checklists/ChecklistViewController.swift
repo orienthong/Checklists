@@ -11,9 +11,11 @@ import UIKit
 
 
 
-class ChecklistViewController: UITableViewController {
+class ChecklistViewController: UITableViewController,AddItemViewControllerDelegate{
     
     var items : [ChecklistItem]
+    
+//    var delegate: AddItemViewControllerDelegate
     
     //the init method is called by Swift when the object comes into existenc
     required init?(coder aDecoder: NSCoder)
@@ -106,6 +108,42 @@ class ChecklistViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        items.removeAtIndex(indexPath.row)
+        
+        let indexPaths = [indexPath]
+        tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+    }
+    
+    func addItemViewControllerDidCancel(controller: AddItemViewController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func addItemViewController(controller: AddItemViewController, didFinishAddItem item: ChecklistItem) {
+        let newRowIndex = items.count
+        
+        items.append(item)
+        
+        let indexPath = NSIndexPath(forRow: newRowIndex, inSection: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+        
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "AddItem" {
+            let navigationController = segue.destinationViewController as! UINavigationController
+            let controller = navigationController.topViewController as! AddItemViewController
+            
+            //Tell AddItemViewController object that ChecklistViewController object is now its delegate
+            //self is ChecklistViewController
+            controller.delegate = self
+            
+        }
     }
 
 
