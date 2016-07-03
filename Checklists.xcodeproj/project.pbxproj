@@ -297,6 +297,7 @@
 				A96513E41D26ABEC0073F38A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
